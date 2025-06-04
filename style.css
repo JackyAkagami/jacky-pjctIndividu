@@ -1,0 +1,101 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f8ff;
+  margin: 0;
+  padding: 20px;
+  color: #2c3e50;
+}
+
+h1,
+h2 {
+  text-align: center;
+  color: #1e90ff;
+}
+
+form {
+  background-color: #ffffff;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(30, 144, 255, 0.1);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+}
+
+input[type="submit"]:hover {
+  background-color: #218838;
+}
+
+a {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  margin: 5px 3px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:hover {
+  background-color: #0056b3;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(30, 144, 255, 0.05);
+}
+
+th,
+td {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  text-align: left;
+}
+
+th {
+  background-color: #e3f2fd;
+  color: #343a40;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+  font-size: 14px;
+}
