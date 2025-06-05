@@ -1,24 +1,37 @@
 <?php
-include 'koneksi.php';
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nama_dokter = $_POST['nama_dokter'];
-    $spesialis = $_POST['spesialis'];
-    mysqli_query($conn, "INSERT INTO dokter (nama_dokter, spesialis) VALUES ('$nama_dokter', '$spesialis')");
-    header("Location: index.php");
+session_start();
+if (!isset($_SESSION['login'])) {
+    header("Location: login.php");
+    exit;
 }
+include 'koneksi.php';
+
+// Ambil daftar dokter dari database
+$dokter = mysqli_query($conn, "SELECT * FROM dokter");
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tambah Dokter</title>
+    <title>Daftar Dokter Tetap</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h2>Tambah Dokter</h2>
-<form method="POST">
-    Nama Dokter: <input type="text" name="nama_dokter"><br>
-    Spesialis: <input type="text" name="spesialis"><br>
-    <input type="submit" value="Simpan">
-</form>
+<div class="container">
+    <h2>Dokter Tetap Klinik Sehat</h2>
+    <table>
+        <tr>
+            <th>Nama Dokter</th>
+            <th>Spesialis</th>
+        </tr>
+        <?php while ($d = mysqli_fetch_assoc($dokter)) { ?>
+            <tr>
+                <td><?= $d['nama_dokter'] ?></td>
+                <td><?= $d['spesialis'] ?></td>
+            </tr>
+        <?php } ?>
+    </table>
+    <br>
+    <a href="index.php">Kembali ke Beranda</a>
+</div>
 </body>
 </html>
