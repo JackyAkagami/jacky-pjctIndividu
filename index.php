@@ -20,13 +20,14 @@ include 'koneksi.php';
  <th>Keluhan</th><th>Total</th><th>Metode</th><th>Aksi</th>
 </tr>
 <?php
-$sql = "SELECT p.id_periksa, pa.nama AS pasien, d.nama_dokter,
-        p.tanggal, p.jam, p.keluhan,
-        b.total_biaya, b.metode_bayar
-        FROM pemeriksaan p
-        JOIN pasien pa ON p.id_pasien=pa.id_pasien
-        JOIN dokter d ON p.id_dokter=d.id_dokter
-        LEFT JOIN pembayaran b ON p.id_periksa=b.id_periksa";
+$sql = "SELECT p.id_periksa, pa.id_pasien, pa.nama AS pasien, d.nama_dokter,
+                   p.tanggal, p.jam, p.keluhan,
+                   b.total_biaya, b.metode_bayar
+            FROM pemeriksaan p
+            JOIN pasien pa ON p.id_pasien=pa.id_pasien
+            JOIN dokter d ON p.id_dokter=d.id_dokter
+            LEFT JOIN pembayaran b ON p.id_periksa=b.id_periksa
+            ORDER BY p.id_periksa ASC";
 $q = mysqli_query($conn,$sql);
 while($r=mysqli_fetch_assoc($q)){
  echo "<tr>
