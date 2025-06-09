@@ -28,18 +28,21 @@ if (isset($_POST['login'])) {
   <!-- Menyisipkan file CSS eksternal untuk styling -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="login-body">
   <!-- Container utama tampilan form login -->
-  <div class="container">
-    <h2>Login Admin Klinik</h2>
+  <div class="login-container">
+    <h2 class="login-title">Login Admin Klinik</h2>
     <!-- Form login menggunakan metode POST -->
     <form method="POST">
+    <label>Username:</label>
       <!-- Input field untuk username (wajib diisi) -->
-      Username: <input type="text" name="username" required>
+      <input type="text" name="username" required class="form-input">
       <!-- Input field untuk password (wajib diisi) -->
-      Password: <input type="password" name="password" required>
+      <label>Password:</label>
+      <input type="password" name="password" required class="form-input">
       <!-- Tombol submit dengan name="login" agar bisa dideteksi oleh PHP -->
-      <input type="submit" name="login" value="Login">
+      <br></br>
+      <input type="submit" name="login" value="Login" class="login-button">
     </form>
   </div>
 </body>
