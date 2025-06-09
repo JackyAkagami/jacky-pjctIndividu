@@ -1,12 +1,8 @@
 <?php
-session_start();
-if (!isset($_SESSION['login'])) {
-    header("Location: login.php");
-    exit;
-}
+// Menghubungkan ke database
 include 'koneksi.php';
 
-// Ambil hanya pemeriksaan yang belum dibayar
+// Ambil data pemeriksaan beserta nama pasien dan dokter untuk dropdown
 $pemeriksaan = mysqli_query($conn, "
     SELECT p.id_periksa, pasien.nama AS nama_pasien, dokter.nama_dokter, p.tanggal
     FROM pemeriksaan p
@@ -16,16 +12,22 @@ $pemeriksaan = mysqli_query($conn, "
     WHERE b.id_periksa IS NULL
 ");
 
+// Jika form dikirim dengan metode POST (form disubmit)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_periksa = $_POST['id_periksa'];
-    $total_biaya = $_POST['total_biaya'];
-    $metode_bayar = $_POST['metode_bayar'];
+  // Ambil data dari form
+  $id_periksa = $_POST['id_periksa'];
+  $total_biaya = $_POST['total_biaya'];
+  $metode_bayar = $_POST['metode_bayar'];
 
-    mysqli_query($conn, "INSERT INTO pembayaran (id_periksa, total_biaya, metode_bayar) 
-                         VALUES ('$id_periksa', '$total_biaya', '$metode_bayar')");
-    header("Location: index.php");
+  // Simpan data pembayaran ke tabel pembayaran
+  mysqli_query($conn, "INSERT INTO pembayaran (id_periksa, total_biaya, metode_bayar) 
+            VALUES ('$id_periksa', '$total_biaya', '$metode_bayar')");
+
+  // Setelah simpan, arahkan ke halaman index.php
+  header("Location: index.php");
     exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,8 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
 <div class="container">
-    <h2>Form Tambah Pembayaran</h2>
+    <h2> Tambah Pembayaran</h2>
     <form method="POST">
+    <!-- Dropdown pilihan pemeriksaan yang menampilkan nama pasien dan nama dokter -->
         <label>Pemeriksaan (yang belum dibayar):</label>
         <select name="id_periksa" required>
             <option value="">-- Pilih Pemeriksaan --</option>
@@ -45,9 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } ?>
         </select><br>
 
+        <!-- Input jumlah total biaya -->
         <label>Total Biaya:</label>
         <input type="number" name="total_biaya" required><br>
 
+        <!-- Dropdown metode pembayaran -->
         <label>Metode Bayar:</label>
         <select name="metode_bayar" required>
             <option value="">-- Pilih Metode --</option>
@@ -55,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <option value="Transfer">Transfer</option>
         </select><br>
 
+        <!-- Tombol submit -->
         <input type="submit" value="Simpan">
     </form>
 </div>
