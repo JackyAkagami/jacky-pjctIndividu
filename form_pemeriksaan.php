@@ -23,29 +23,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $tanggal   = $_POST['tanggal'];
   $jam       = $_POST['jam'];
   $keluhan   = $_POST['keluhan'];
+// Konversi tanggal dan jam menjadi timestamp (format detik)
+$waktu_input = strtotime("$tanggal $jam");
 
-  // Cek di database apakah dokter sudah ada jadwal di tanggal dan jam yang sama
-  $cek = mysqli_query($conn, "SELECT * FROM pemeriksaan 
-    WHERE id_dokter='$id_dokter' AND tanggal='$tanggal' AND jam='$jam'");
+// Query semua jadwal pada tanggal & dokter yang sama
+$cek = mysqli_query($conn, "SELECT * FROM pemeriksaan 
+    WHERE id_dokter='$id_dokter' AND tanggal='$tanggal'");
 
-  if (mysqli_num_rows($cek) > 0) {
-    // Jika jadwal bentrok, ambil nama dokter untuk pesan error
-    $dokter_nama = mysqli_fetch_assoc(mysqli_query($conn, 
+$bentrok = false; // Flag untuk menentukan apakah jadwal bentrok
+while ($row = mysqli_fetch_assoc($cek)) {
+    $waktu_terdaftar = strtotime($row['tanggal'] . ' ' . $row['jam']);
+    // Hitung selisih waktu antara jadwal input dan jadwal yang sudah ada
+    $selisih = abs($waktu_input - $waktu_terdaftar);
+
+    // Jika selisih kurang dari 20 menit (1200 detik), maka bentrok
+    if ($selisih < 1200) { // 1200 detik = 20 menit
+        $bentrok = true;
+        break; // keluar dari loop karena sudah ketemu bentrok
+    }
+}
+
+ // Jika jadwal bentrok
+if ($bentrok) {
+  // Ambil nama dokter
+  $dokter_nama = mysqli_fetch_assoc(mysqli_query($conn, 
       "SELECT nama_dokter FROM dokter WHERE id_dokter='$id_dokter'"))['nama_dokter'];
 
-    // Tampilkan alert jadwal bentrok ke user
-    echo "<script>alert('Jadwal bentrok! Dokter $dokter_nama sudah punya jadwal pada $tanggal jam $jam');</script>";
-  } else {
+ // Ambil nama pasien yang sudah memiliki jadwal di jam tersebut
+  $nama_pasien_lama = mysqli_fetch_assoc(mysqli_query($conn, 
+      "SELECT nama FROM pasien WHERE id_pasien = '{$row['id_pasien']}'"))['nama'];
+
+  // Format jam dan tanggal jadwal bentrok untuk ditampilkan
+  $jam_awal  = date("H:i", $waktu_terdaftar);
+  $jam_akhir = date("H:i", strtotime("+20 minutes", $waktu_terdaftar));
+  $tanggal_format = date("d/m/Y", strtotime($row['tanggal']));
+
+  // Tampilkan alert ke user mengenai jadwal bentrok
+  echo "<script>alert('Jadwal bentrok! Dokter $dokter_nama sudah memiliki janji dengan $nama_pasien_lama pada pukul $jam_awal hingga $jam_akhir tanggal $tanggal_format');</script>";
+} else {
     // Jika tidak bentrok, simpan data pemeriksaan ke database
     mysqli_query($conn, "INSERT INTO pemeriksaan 
-      (id_pasien, id_dokter, tanggal, jam, keluhan) 
-      VALUES 
-      ('$id_pasien', '$id_dokter', '$tanggal', '$jam', '$keluhan')");
-
-    // Redirect ke halaman utama setelah berhasil simpan
-    header("Location: index.php");
+        (id_pasien, id_dokter, tanggal, jam, keluhan) 
+     VALUES 
+        ('$id_pasien', '$id_dokter', '$tanggal', '$jam', '$keluhan')");
+    header("Location: index.php"); // Redirect ke halaman index setelah input berhasil
     exit;
-  }
+}
+
 }
 ?>
 

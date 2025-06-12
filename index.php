@@ -35,8 +35,15 @@ include 'koneksi.php'; // Memasukkan file koneksi.php yang berisi kode koneksi k
 <!-- Tabel untuk menampilkan data pemeriksaan -->
 <table>
 <tr>
-  <th>ID</th><th>Pasien</th><th>Dokter</th><th>Tanggal</th><th>Jam</th>
-  <th>Keluhan</th><th>Total</th><th>Metode</th><th>Aksi</th>
+  <th>ID</th>
+  <th>Pasien</th>
+  <th>Dokter</th>
+  <th>Tanggal</th>
+  <th>Jam</th>
+  <th>Keluhan</th>
+  <th>Total</th>
+  <th>Metode</th>
+  <th>Aksi</th>
 </tr>
 <?php
 // Ambil nilai pencarian jika ada
@@ -62,10 +69,12 @@ $sql .= " ORDER BY p.id_periksa ASC";
 // Jalankan query di database
 $q = mysqli_query($conn,$sql);
 
+$no = 1; // Nomor urut tabel dari 1
 // Tampilkan hasil query ke dalam tabel HTML
 while($r=mysqli_fetch_assoc($q)){ // Loop setiap baris hasil query untuk ditampilkan di tabel
+    // Cetak setiap baris data pemeriksaan dalam tabel
     echo "<tr>
-            <td>{$r['id_periksa']}</td>
+            <td>{$no}</td>
             <td>{$r['pasien']}</td>
             <td>{$r['nama_dokter']}</td>
             <td>{$r['tanggal']}</td>
@@ -74,15 +83,17 @@ while($r=mysqli_fetch_assoc($q)){ // Loop setiap baris hasil query untuk ditampi
             <td>".($r['total_biaya']??'-')."</td>
             <td>".($r['metode_bayar']??'-')."</td>
             <td>
-              <a href='edit_pemeriksaan.php?id={$r['id_periksa']}'>Edit</a>
-              <a href='delete_pemeriksaan.php?id={$r['id_periksa']}' 
-                   onclick=\"return confirm('Hapus data?')\">Hapus</a>
-            </td>
+            <a href='info_pasien.php?id={$r['id_pasien']}'>Informasi</a>
+            <a href='edit_pemeriksaan.php?id={$r['id_periksa']}'>Edit</a>
+            <a href='delete_pemeriksaan.php?id={$r['id_periksa']}'
+               onclick=\"return confirm('Hapus data?')\">Hapus</a>
+        </td>
           </tr>";
           // Tampilkan data setiap pemeriksaan ke dalam baris tabel,
           // Kolom aksi berisi link untuk edit dan hapus data,
           // dengan konfirmasi popup saat klik hapus
-}
+        $no++; // Increment nomor urut
+    }
 ?>
 </table>
 </div>
