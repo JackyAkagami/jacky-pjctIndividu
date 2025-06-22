@@ -1,16 +1,17 @@
 <?php
-session_start();
+session_start(); // Memulai sesi untuk mengecek apakah dokter sudah login
+// Jika dokter belum login, arahkan ke halaman login
 if (!isset($_SESSION['dokter_login'])) {
     header("Location: login_dokter.php");
     exit;
 }
-include 'koneksi.php';
-$id_dokter = $_SESSION['id_dokter'];
+include 'koneksi.php'; // Menghubungkan ke database
+$id_dokter = $_SESSION['id_dokter']; // Ambil ID dokter yang sedang login dari session
 
-// Ambil nama dokter
+// Ambil nama dokter berdasarkan ID untuk ditampilkan di halaman
 $dokter = mysqli_fetch_assoc(mysqli_query($conn, "SELECT nama_dokter FROM dokter WHERE id_dokter='$id_dokter'"))['nama_dokter'];
 
-// Ambil data pemeriksaan dokter ini
+// Ambil semua data pemeriksaan yang ditangani oleh dokter ini, gabung dengan data nama pasien
 $q = mysqli_query($conn, "SELECT p.*, pa.nama AS nama_pasien 
                           FROM pemeriksaan p 
                           JOIN pasien pa ON p.id_pasien = pa.id_pasien 
@@ -21,25 +22,27 @@ $q = mysqli_query($conn, "SELECT p.*, pa.nama AS nama_pasien
 <html>
 <head>
   <title>Jadwal Dokter</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"> <!-- Menghubungkan file CSS -->
 </head>
 <body>
-<h2>Jadwal Pemeriksaan Dokter <?= $dokter ?></h2>
+<h2>Jadwal Pemeriksaan Dokter <?= $dokter ?></h2> <!-- Tampilkan nama dokter -->
+<!-- Tabel daftar pemeriksaan -->
 <table border="1" cellpadding="8">
 <tr>
-  <th>Pasien</th>
-  <th>Tanggal</th>
-  <th>Jam</th>
-  <th>Keluhan</th>
-  <th>Selesaikan</th>
+  <th>Pasien</th> <!-- Nama pasien -->
+  <th>Tanggal</th> <!-- Tanggal pemeriksaan -->
+  <th>Jam</th>  <!-- Jam pemeriksaan -->
+  <th>Keluhan</th> <!-- Keluhan pasien -->
+  <th>Selesaikan</th> <!-- Tombol untuk menyelesaikan -->
 </tr>
-<?php while ($row = mysqli_fetch_assoc($q)) { ?>
+<?php while ($row = mysqli_fetch_assoc($q)) { ?> <!-- Loop data pemeriksaan -->
 <tr>
-  <td><?= $row['nama_pasien'] ?></td>
-  <td><?= $row['tanggal'] ?></td>
-  <td><?= $row['jam'] ?></td>
-  <td><?= $row['keluhan'] ?></td>
+  <td><?= $row['nama_pasien'] ?></td> <!-- Kolom nama pasien -->
+  <td><?= $row['tanggal'] ?></td> <!-- Kolom tanggal -->
+  <td><?= $row['jam'] ?></td> <!-- Kolom jam -->
+  <td><?= $row['keluhan'] ?></td> <!-- Kolom keluhan -->
   <td>
+        <!-- Tombol selesai, akan menghapus dari tabel pemeriksaan dan memindahkan ke tabel selesai -->
   <a href='selesaikan.php?id=<?= $row['id_periksa'] ?>' 
      onclick="return confirm('Tandai sebagai selesai?')">Selesai</a>
 </td>
@@ -48,7 +51,7 @@ $q = mysqli_query($conn, "SELECT p.*, pa.nama AS nama_pasien
 <?php } ?>
 </table>
 <br>
-<a href="riwayat_selesai.php">Lihat Riwayat</a>
-<a href="logout_dokter.php">Logout</a>
+<a href="riwayat_selesai.php">Lihat Riwayat</a> <!-- Menuju halaman riwayat -->
+<a href="logout_dokter.php">Logout</a> <!-- Logout dokter -->
 </body>
 </html>
