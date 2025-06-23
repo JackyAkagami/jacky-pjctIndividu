@@ -11,14 +11,21 @@ $id_dokter = $_SESSION['id_dokter']; // Ambil ID dokter dari session login
 $tanggal = date('Y-m-d'); // Ambil tanggal hari ini dalam format Y-m-d (misal: 2025-06-25)
 
 // Query untuk mengambil data dari tabel pemeriksaan_selesai yang hanya dilakukan hari ini
-$q = mysqli_query($conn, "
-    SELECT s.*, p.nama, p.alamat, p.no_hp
-    FROM pemeriksaan_selesai s
-    JOIN pasien p ON s.id_pasien = p.id_pasien
-    WHERE s.id_dokter = '$id_dokter'
-    AND DATE(selesai_pada) = '$tanggal'
-    ORDER BY s.selesai_pada DESC
-"); // Data yang ditampilkan adalah milik dokter yang login dan hanya untuk hari ini
+          $q = mysqli_query($conn, "
+              SELECT s.*, p.nama, p.alamat, p.no_hp
+              FROM pemeriksaan_selesai s
+              JOIN pasien p ON s.id_pasien = p.id_pasien
+              WHERE s.id_dokter = '$id_dokter'
+              AND DATE(selesai_pada) = '$tanggal'
+              ORDER BY s.selesai_pada DESC
+          ")
+        ; // Ambil semua data dari tabel pemeriksaan_selesai dan data pasien
+        // Tabel utama: pemeriksaan_selesai dengan alias s
+        // Gabungkan dengan tabel pasien berdasarkan id_pasien
+        // Filter hanya data dari dokter yang sedang login
+        // Tampilkan hanya data yang diselesaikan pada tanggal hari ini
+        // Urutkan dari yang paling baru selesai ke yang lama
+
 ?>
 
 <!DOCTYPE html>

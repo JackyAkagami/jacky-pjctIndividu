@@ -11,6 +11,13 @@ $pemeriksaan = mysqli_query($conn, "
     LEFT JOIN pembayaran b ON p.id_periksa = b.id_periksa
     WHERE b.id_periksa IS NULL
 ");
+// Ambil ID pemeriksaan, nama pasien, nama dokter, dan tanggal pemeriksaan
+// Tabel utama adalah pemeriksaan, diberi alias p
+// Gabungkan tabel pasien berdasarkan id_pasien
+// Gabungkan tabel pasien berdasarkan id_pasien
+// Gabungkan (left join) dengan tabel pembayaran berdasarkan id_periksa, agar data pemeriksaan tetap ditampilkan meskipun belum ada pembayaran
+// Hanya ambil data pemeriksaan yang belum memiliki pembayaran (belum dibayar)
+
 
 // Jika form dikirim dengan metode POST (form disubmit)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

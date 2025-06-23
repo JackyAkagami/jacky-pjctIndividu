@@ -50,13 +50,21 @@ include 'koneksi.php'; // Memasukkan file koneksi.php yang berisi kode koneksi k
 $cari = isset($_GET['cari']) ? mysqli_real_escape_string($conn, $_GET['cari']) : '';
 
 // Query untuk mengambil data pemeriksaan lengkap dengan data pasien, dokter, dan pembayaran
-$sql = "SELECT p.id_periksa, pa.id_pasien, pa.nama AS pasien, d.nama_dokter,
+$sql = "SELECT p.id_periksa, pa.id_pasien, pa.nama AS pasien, d.nama_dokter, 
                p.tanggal, p.jam, p.keluhan,
                b.total_biaya, b.metode_bayar
         FROM pemeriksaan p
         JOIN pasien pa ON p.id_pasien=pa.id_pasien
         JOIN dokter d ON p.id_dokter=d.id_dokter
         LEFT JOIN pembayaran b ON p.id_periksa=b.id_periksa";
+        // Ambil id pemeriksaan, id & nama pasien (alias: pasien), dan nama dokter
+        // Ambil tanggal, jam, dan keluhan dari tabel pemeriksaan
+        // Ambil total biaya dan metode bayar dari tabel pembayaran (jika ada)
+        // Tabel utama adalah pemeriksaan, diberi alias 'p'
+        // Gabung dengan tabel pasien (alias 'pa') berdasarkan id_pasien
+        // Gabung dengan tabel dokter (alias 'd') berdasarkan id_dokter
+        // Gabung kiri dengan tabel pembayaran (alias 'b'), agar data pemeriksaan tetap muncul meski belum dibayar
+
 
 // Jika pengguna mengisi kolom pencarian, tambahkan kondisi WHERE
 if ($cari != '') {

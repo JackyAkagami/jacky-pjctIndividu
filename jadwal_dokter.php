@@ -16,7 +16,14 @@ $q = mysqli_query($conn, "SELECT p.*, pa.nama AS nama_pasien
                           FROM pemeriksaan p 
                           JOIN pasien pa ON p.id_pasien = pa.id_pasien 
                           WHERE p.id_dokter = '$id_dokter'
+                          AND p.tanggal >= CURDATE()
                           ORDER BY p.tanggal, p.jam");
+                          // Ambil semua kolom dari tabel pemeriksaan dan nama dari tabel pasien
+                          // Tabel utama adalah pemeriksaan, alias p
+                          // Gabungkan dengan tabel pasien berdasarkan id_pasien
+                          // Filter hanya data milik dokter yang sedang login
+                          // Tampilkan hanya pemeriksaan hari ini atau setelahnya
+                          // Urutkan berdasarkan tanggal dan jam pemeriksaan
 ?>
 <!DOCTYPE html>
 <html>

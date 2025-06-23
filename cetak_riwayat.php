@@ -23,12 +23,19 @@ $d = mysqli_fetch_assoc($q_dokter);
 $dokter = $d['nama_dokter'] ?? 'Tidak diketahui'; // Jika tidak ditemukan, fallback
 
 // Ambil riwayat pemeriksaan hari ini
-$q = mysqli_query($conn, "SELECT s.*, p.nama, p.alamat, p.no_hp
-                          FROM pemeriksaan_selesai s
-                          JOIN pasien p ON s.id_pasien = p.id_pasien
-                          WHERE s.id_dokter='$id_dokter' 
-                          AND DATE(selesai_pada) = '$tanggal'
-                          ORDER BY selesai_pada DESC");
+$q = mysqli_query($conn, 
+                "SELECT s.*, p.nama, p.alamat, p.no_hp
+                FROM pemeriksaan_selesai s
+                JOIN pasien p ON s.id_pasien = p.id_pasien
+                WHERE s.id_dokter='$id_dokter' 
+                AND DATE(selesai_pada) = '$tanggal'
+                ORDER BY selesai_pada DESC");
+                // Ambil semua kolom dari tabel pemeriksaan_selesai (s), dan kolom nama, alamat, no_hp dari tabel pasien
+                // Tabel utama adalah pemeriksaan_selesai dengan alias s
+                // Gabungkan dengan tabel pasien berdasarkan id_pasien
+                // Filter data berdasarkan dokter yang sedang login
+                // Hanya ambil data yang selesai pada tanggal hari ini
+                // Urutkan hasil berdasarkan waktu selesai, dari yang terbaru ke yang lama
 
 
 // Buat HTML konten untuk file PDF
